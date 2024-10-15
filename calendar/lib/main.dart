@@ -27,36 +27,37 @@ class CalendarHomePage extends StatefulWidget {
 }
 
 class _CalendarHomePageState extends State<CalendarHomePage> {
-  final DateTime _currentDate = DateTime.now();
-  late DateTime _displayedMonth;
+  final DateTime currentDate = DateTime.now();
+  late DateTime displayedMonth;
 
   @override
   void initState() {
     super.initState();
-    _displayedMonth = DateTime(_currentDate.year, _currentDate.month);
+    displayedMonth = DateTime(currentDate.year, currentDate.month);
   }
 
-  void _changeMonth(int value) {
+  void changeMonth(int value) {
     setState(() {
-      _displayedMonth =
-          DateTime(_displayedMonth.year, _displayedMonth.month + value);
+      displayedMonth =
+          DateTime(displayedMonth.year, displayedMonth.month + value);
     });
   }
 
-  void _goToToday() {
+  void goToToday() {
     setState(() {
-      _displayedMonth = DateTime(_currentDate.year, _currentDate.month);
+      displayedMonth = DateTime(currentDate.year, currentDate.month);
     });
   }
 
-  List<DateTime?> _generateDaysInMonth(DateTime month) {
+  List<DateTime?> generateDaysInMonth(DateTime month) {
     final firstDayOfMonth = DateTime(month.year, month.month, 0);
     final lastDayOfMonth = DateTime(month.year, month.month + 1, 0);
     final daysInMonth = lastDayOfMonth.day;
     List<DateTime?> days = [];
-
-    for (int i = 0; i < firstDayOfMonth.weekday; i++) {
-      days.add(null);
+    if (firstDayOfMonth.weekday != 7) {
+      for (int i = 0; i < firstDayOfMonth.weekday; i++) {
+        days.add(null);
+      }
     }
 
     for (int day = 1; day <= daysInMonth; day++) {
@@ -68,9 +69,9 @@ class _CalendarHomePageState extends State<CalendarHomePage> {
 
   @override
   Widget build(BuildContext context) {
-    final daysInMonth = _generateDaysInMonth(_displayedMonth);
-    final isCurrentMonth = _displayedMonth.year == _currentDate.year &&
-        _displayedMonth.month == _currentDate.month;
+    final daysInMonth = generateDaysInMonth(displayedMonth);
+    final isCurrentMonth = displayedMonth.year == currentDate.year &&
+        displayedMonth.month == currentDate.month;
 
     return Scaffold(
       appBar: AppBar(
@@ -79,7 +80,7 @@ class _CalendarHomePageState extends State<CalendarHomePage> {
           if (!isCurrentMonth)
             IconButton(
               icon: const Icon(Icons.today),
-              onPressed: _goToToday,
+              onPressed: goToToday,
             ),
         ],
       ),
@@ -92,14 +93,14 @@ class _CalendarHomePageState extends State<CalendarHomePage> {
               children: [
                 IconButton(
                     icon: const Icon(Icons.arrow_back),
-                    onPressed: () => _changeMonth(-1)),
+                    onPressed: () => changeMonth(-1)),
                 Text(
-                  DateFormat.yMMMM().format(_displayedMonth),
+                  DateFormat.yMMMM().format(displayedMonth),
                   style: const TextStyle(fontSize: 20),
                 ),
                 IconButton(
                     icon: const Icon(Icons.arrow_forward),
-                    onPressed: () => _changeMonth(1)),
+                    onPressed: () => changeMonth(1)),
               ],
             ),
             GridView.count(
@@ -111,7 +112,7 @@ class _CalendarHomePageState extends State<CalendarHomePage> {
                 return Center(
                   child: Text(
                     days[index],
-                    style: TextStyle(fontWeight: FontWeight.w900),
+                    style: const TextStyle(fontWeight: FontWeight.w900),
                   ),
                 );
               }),
@@ -120,9 +121,9 @@ class _CalendarHomePageState extends State<CalendarHomePage> {
               child: GestureDetector(
                 onHorizontalDragEnd: (details) {
                   if (details.velocity.pixelsPerSecond.dx > 0) {
-                    _changeMonth(-1);
+                    changeMonth(-1);
                   } else if (details.velocity.pixelsPerSecond.dx < 0) {
-                    _changeMonth(1);
+                    changeMonth(1);
                   }
                 },
                 child: AnimatedSwitcher(
@@ -135,7 +136,7 @@ class _CalendarHomePageState extends State<CalendarHomePage> {
                     );
                   },
                   child: GridView.builder(
-                    key: ValueKey<DateTime>(_displayedMonth),
+                    key: ValueKey<DateTime>(displayedMonth),
                     physics: const NeverScrollableScrollPhysics(),
                     gridDelegate:
                         const SliverGridDelegateWithFixedCrossAxisCount(
@@ -147,7 +148,7 @@ class _CalendarHomePageState extends State<CalendarHomePage> {
                       return Container(
                         margin: const EdgeInsets.all(4),
                         decoration: BoxDecoration(
-                          color: _blockcolor(date),
+                          color: blockcolor(date),
                           borderRadius: BorderRadius.circular(8),
                         ),
                         alignment: Alignment.center,
@@ -166,16 +167,15 @@ class _CalendarHomePageState extends State<CalendarHomePage> {
     );
   }
 
-  Color _blockcolor(DateTime? day) {
+  Color blockcolor(DateTime? day) {
     if (day == null) {
       return Colors.transparent;
     }
-    if (day.year == _currentDate.year &&
-        day.month == _currentDate.month &&
-        day.day == _currentDate.day) {
+    if (day.year == currentDate.year &&
+        day.month == currentDate.month &&
+        day.day == currentDate.day) {
       return Colors.deepOrange;
-    } else if (day.year == _currentDate.year &&
-        day.month == _currentDate.month) {
+    } else if (day.year == currentDate.year && day.month == currentDate.month) {
       return Colors.deepPurpleAccent;
     } else {
       return Colors.grey;
