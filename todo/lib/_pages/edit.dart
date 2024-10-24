@@ -35,7 +35,7 @@ class _EditState extends State<Edit> {
     return Scaffold(
       resizeToAvoidBottomInset: false,
       appBar: AppBar(
-        title: Text("Edit",
+        title: const Text("Edit",
             style: TextStyle(
                 fontWeight: FontWeight.bold, color: Color(0xff052659))),
         flexibleSpace: Container(
@@ -127,8 +127,7 @@ class _EditState extends State<Edit> {
                           shape: const RoundedRectangleBorder(
                               borderRadius:
                                   BorderRadius.all(Radius.circular(20))),
-                          padding:
-                              const EdgeInsets.all(20), // Отступы внутри кнопки
+                          padding: const EdgeInsets.all(20),
                         ),
                         child: const Icon(Icons.delete)),
                   ),
@@ -146,8 +145,7 @@ class _EditState extends State<Edit> {
                           shape: const RoundedRectangleBorder(
                               borderRadius:
                                   BorderRadius.all(Radius.circular(20))),
-                          padding:
-                              const EdgeInsets.all(20), // Отступы внутри кнопки
+                          padding: const EdgeInsets.all(20),
                         ),
                         child: const Icon(Icons.save)),
                   ),
